@@ -8,14 +8,15 @@
       </form>
     </section>
     <div v-if="error">
-      <h2>erorr!! {{ error.error }}</h2>
+      <h2>erorr!! {{ error }}</h2>
     </div>
+    <div v-if="fetching"><h2>Fetching Data!</h2></div>
     <div class="search-results" v-for="brewery in list" :key="brewery.id">
       <ul>
-        <li>Name: {{ brewery.name }}</li>
-        <li>Street:</li>
-        <li>City:</li>
-        <li>Zip:</li>
+        <li><span class="title">Name:</span> <span class="brew">{{ brewery.name }}</span></li>
+        <li><span class="title">Street:</span> <span class="brew">{{ brewery.street}}</span></li>
+        <li><span class="title">City:</span><span class="brew"> {{ brewery.city }}</span></li>
+        <li><span class="title">Zip:</span><span class="brew"> {{brewery.postal_code}}</span></li>
       </ul>
     </div>
   </div>
@@ -23,14 +24,18 @@
 
 <script>
 import useBrewList from "../composition/use-brew-list";
-export default {
+
+
+import {createComponent} from '@vue/composition-api';
+export default createComponent({
   setup() {
-    const { submitted, list, val, error } = useBrewList();
+    const { submitted, list, val, error, fetching } = useBrewList();
     return {
       val,
       list,
       submitted,
-      error
+      error,
+      fetching
     };
   }
   //   data() {
@@ -50,13 +55,13 @@ export default {
   //       event.preventDefault();
   //     }
   //   }
-};
+});
 </script>
 
 <style scoped>
 .search-results {
   display: flex;
-  width: 300px;
+  width: 600px;
   text-align: left;
 }
 .brews {
@@ -69,5 +74,14 @@ export default {
 }
 ul {
   list-style-type: none;
+  width: 100%;
 }
+li {
+  display: flex;
+  justify-content: space-between;
+}
+.brew {
+  font-weight: bold;
+}
+
 </style>

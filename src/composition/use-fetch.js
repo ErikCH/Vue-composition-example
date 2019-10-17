@@ -1,23 +1,22 @@
-import { toRefs, reactive } from "@vue/composition-api";
+import {toRefs, reactive} from '@vue/composition-api';
 
 export default function(url, options) {
   const state = reactive({
     response: [],
-    error: null
+    error: null,
+    fetching: false
   });
   const fetchData = async () => {
+    state.fetching = true;
     try {
       const res = await fetch(url, options);
-      console.log("url", res);
       const json = await res.json();
       state.response = json;
-      console.log("r", state.response);
     } catch (errors) {
       state.error = errors;
+    } finally {
+      state.fetching = false;
     }
   };
-  fetchData();
-  console.log("resp", state.response.value);
-  console.log("error", state.response.error);
-  return { ...toRefs(state) };
+  return {...toRefs(state), fetchData};
 }
